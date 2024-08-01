@@ -199,8 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const formData = new FormData();
 
     // Append fields in the desired order
-    // formData.append('subject', `New message: ${titleInput.value}`);
-    formData.append('subject', titleInput.value);
+    formData.append('subject', `New message: ${titleInput.value}`);
     formData.append('fullname', nameInput.value);
     formData.append('email', emailInput.value);
     formData.append('message', messageInput.value);
@@ -218,7 +217,9 @@ document.addEventListener('DOMContentLoaded', function() {
         form.reset();
         submitButton.disabled = true;
       } else {
-        alert('There was a problem with your submission.');
+        return response.json().then(data => {
+          alert('There was a problem with your submission: ' + data.error);
+        });
       }
     }).catch(error => {
       alert('There was a problem with your submission.');
