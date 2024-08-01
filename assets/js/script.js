@@ -170,3 +170,58 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('contactForm');
+  const inputs = form.querySelectorAll('[data-form-input]');
+  const submitButton = form.querySelector('[data-form-btn]');
+  const titleInput = document.getElementById('title');
+  const emailInput = form.querySelector('input[name="email"]');
+  const nameInput = form.querySelector('input[name="fullname"]');
+  const messageInput = form.querySelector('textarea[name="message"]');
+
+  inputs.forEach(input => {
+    input.addEventListener('input', () => {
+      let allFilled = true;
+      inputs.forEach(input => {
+        if (!input.value) {
+          allFilled = false;
+        }
+      });
+      submitButton.disabled = !allFilled;
+    });
+  });
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Create a new FormData object
+    const formData = new FormData();
+
+    // Append fields in the desired order
+    // formData.append('subject', `New message: ${titleInput.value}`);
+    formData.append('subject', titleInput.value);
+    formData.append('fullname', nameInput.value);
+    formData.append('email', emailInput.value);
+    formData.append('message', messageInput.value);
+
+    // Submit the form data via Fetch
+    fetch(form.action, {
+      method: form.method,
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        alert('Your message has been sent!');
+        form.reset();
+        submitButton.disabled = true;
+      } else {
+        alert('There was a problem with your submission.');
+      }
+    }).catch(error => {
+      alert('There was a problem with your submission.');
+    });
+  });
+});
